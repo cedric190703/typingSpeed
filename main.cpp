@@ -1,16 +1,17 @@
 #include <iostream>
-#include <conio.h>
+#include <chrono>
 #include "Game/Game.h"
 #include "Texts/Texts.h"
 #include "Time/Time.h"
 
 int main() {
-    // Init objects
-    Player player("Name", 0);
-    Game game(player, 0);
-
     // Select a text randomly
     string text = getText();
+    int strLen = text.length();
+    
+    // Init objects
+    Player* player = new Player("Name", 0);
+    Game game(player, 0, text, strLen);
 
     cout << "Type 'start' to start the game : " << endl;
     string st;
@@ -25,37 +26,66 @@ int main() {
     int idx = 0;
     int state = 0; // 0 => supp | 1 => letter
 
+    char key;
+
+    // start the chrono
+    auto start = chrono::high_resolution_clock::now();
+
     while(true) {
         // Get key pressed
-        if (_kbhit()) {
-            key = _getch();
-            if(key == 127) {
-                // Supp key
-                state = 0;
+        cin >> key;
+
+        if(key == 127) {
+            // Supp key
+            state = 0;
+            idx = idx == 0 ? idx : idx--;
+
+            // Evaluate game
+            game.evaluateGame(idx, key, state);
+
+            // Set boards
+            game.setBadIdx(idx);
+
+            // Draw sentence
+            game.drawGame(idx);
+
+        } else {
+            // Other key (letters hopefully)
+            if(key >= 'a' && key <= 'z') {
+                // Letter found
+            
+                state = 1;
+                // Evaluate game
+                game.evaluateGame(idx, key, state);
+
+                // set boards
+                game.setCorrectIdx(idx);
+
+                // Draw sentence
+                game.drawGame(idx);
+
+                idx++;
+                if(idx == strLen) {
+                    break;
+                }
 
             } else {
-                // Other key (letters hopefully)
-                if(key >= 'a' && key <= 'z') {
-                    // Letter found
-                    state = 1;
-                } else {
-                    continue;
-                }
+                continue;
             }
         }
-        // Evaluate game
-        game.evaluateGame(idx, text, key, state);
-
-        // Draw sentence
-        game.drawGame();
     }
+    
+    // end clock
+    auto stop = chrono::high_resolution_clock::now();
+
+    auto durationMinutes = chrono::duration_cast<chrono::minutes>(stop - start);
 
     // Evaluate the final state of the game
     // Number of words = (Number of characters) / (Average word length)
-    int nbWords;
+    int nbWords = getNbWords(text);
 
     // Words per minute = (Number of words) / (Time in minutes)
-    int wordsPMinutes;
+    int wordsPMinutes = getWordsPMinutes(text);
 
     cout << "Number of words : " << nbWords << endl;
     cout << "Words per minute : " << wordsPMinutes << endl;
