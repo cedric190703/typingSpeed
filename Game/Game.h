@@ -25,6 +25,6 @@ public:
     int getGoodA() { return this->goodA; };
     void drawGame(int);
     void evaluateGame(int idx, char a, int state);
-    void setCorrectIdx(int i) { this->correctIdx[i] = 1; };
-    void setBadIdx(int i) { this->correctIdx[i] = 0; };
+    void displayText();
+    void setBadChoice(int idx) { this->correctIdx[idx] = 0; };
 };

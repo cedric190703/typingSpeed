@@ -3,8 +3,7 @@
 
 using namespace std;
 
-int nbChar(string text);
-int nbWords(string text);
-int avgWordLen(string text);
-int getNbWords(string text);
-int getWordsPMinutes(string text);
+int nbChar(string text, int size);
+int nbWord(string text, int size);
+int avgWordLen(string text, int size);
+int getNbWords(string text, int size);
