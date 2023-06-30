@@ -19,7 +19,8 @@ public:
         }
     };
     ~Game() {
-        delete correctIdx;
+        delete[] correctIdx;
+        delete player;
     };
     Player* getPlayer() { return this->player; };
     int getGoodA() { return this->goodA; };
@@ -27,4 +28,5 @@ public:
     void evaluateGame(int idx, char a, int state);
     void displayText();
     void setBadChoice(int idx) { this->correctIdx[idx] = 0; };
+    int getNbCorrect();
 };

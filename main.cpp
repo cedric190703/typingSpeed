@@ -54,6 +54,9 @@ int main() {
     auto start = chrono::high_resolution_clock::now();
 
     // Draw sentence
+    int fix = 0;
+    int correctA = 0;
+
     game.displayText();
     cout << "Start by typing a character" << endl;
     while(true) {
@@ -68,10 +71,10 @@ int main() {
 
             idx = idx == 0 ? idx : idx-1;
 
-            cout << idx << endl;
+            fix = idx == 0 ? 0 : fix;
 
             if(!idx) {
-                game.displayText();
+                game.drawGame(idx-1);
             } else {
                 // Draw sentence
                 game.drawGame(idx);
@@ -80,40 +83,42 @@ int main() {
             // Letter found
             state = 1;
 
-            if(idx > 0) {
+            if(idx > 1 || fix) {
                 idx++;
                 // Evaluate game
                 game.evaluateGame(idx, key, state);
+
+                
+                // Draw sentence
+                game.drawGame(idx);
             } else {
                 // Evaluate game
                 game.evaluateGame(idx, key, state);
-                idx++;
+
+                // Draw sentence
+                game.drawGame(idx);
+                fix = 1;
             }
-
-            // Draw sentence
-            game.drawGame(idx);
-
             
-            if(idx >= strLen) {
+            if(idx == strLen-1) {
+                correctA = game.getNbCorrect();
                 break;
             }
         }
     }
 
-    // end clock
-    auto stop = std::chrono::high_resolution_clock::now();
+    float resFloat = (float)correctA;
 
-    auto durationMinutes = std::chrono::duration_cast<std::chrono::minutes>(stop - start);
+    cout << "Number of correct character : " << correctA << endl;
 
-    // Evaluate the final state of the game
-    // Number of words = (Number of characters) / (Average word length)
-    int nbWords = getNbWords(text, strLen);
+    float res;
+    if(!resFloat) {
+        res = 0;
+    } else {
+        res = (resFloat*100) / strLen;
+    }
 
-    // Words per minute = (Number of words) / (Time in minutes)
-    int wordsPMinutes = nbWords / static_cast<int>(durationMinutes.count());
-
-    cout << "Number of words : " << nbWords << endl;
-    cout << "Words per minute : " << wordsPMinutes << endl;
+    cout << "Percentage of correct character for the game : " << res << endl;
 
     return 0;
 }

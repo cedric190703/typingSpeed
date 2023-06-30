@@ -40,3 +40,13 @@ void Game::evaluateGame(int idx, char a, int state) {
         }
     }
 }
+
+int Game::getNbCorrect() {
+    int cpt = 0;
+    for(int i = 0; i < this->size; i++) {
+        if(this->correctIdx[i]) {
+            cpt++;
+        }
+    }
+    return cpt;
+}

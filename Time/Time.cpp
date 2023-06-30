@@ -1,4 +1,5 @@
 #include "Time.h"
+#include <string>
 
 int nbChar(string text, int size) {
     int cpt = 0;
@@ -37,6 +38,6 @@ int avgWordLen(string text, int size) {
     return sum/nbWords;
 }
 
-int getNbWords(string text, int size) {
-    return nbChar(text, size)/avgWordLen(text, size);
+int getNbWords(int correct, int size) {
+    return correct/size;
 }
